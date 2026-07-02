@@ -1,0 +1,22 @@
+# Node.js dependencies & builds
+**/node_modules/
+**/dist/
+**/.vercel/
+**/.vite/
+.vercel/
+
+# Python environments & cache
+**/venv/
+**/.venv/
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# User specific configurations
+.vscode/
+.idea/
+*.log

@@ -1,0 +1,246 @@
+SKIN CANCER DETECTION SYSTEM USING CNN+XGBOOST AND VIT+XGBOOST WITH WEB APPLICATION
+2026
+COMPUTER ENGINEERING
+GRADUATION PROJECT FINAL REPORT
+Najma Mohamed
+
+SKIN CANCER DETECTION SYSTEM USING CNN+XGBOOST AND VIT+XGBOOST WITH WEB APPLICATION
+Prepared as a Graduation Project Final Report
+Karabük University
+Faculty of Engineering
+Department of Computer Engineering
+
+KARABÜK
+June 2026
+
+APPROVAL PAGE
+This graduation project final report prepared by Najma Mohamed and titled "Skin Cancer Detection System Using CNN+XGBoost and ViT+XGBoost with Web Application" has been reviewed and approved as a Graduation Project Final Report.
+Dr. [Advisor Full Name]        ........................................
+Graduation Project Advisor, Department of Computer Engineering
+Date: ....../....../2026
+The Department of Computer Engineering has approved this report as a Graduation Project Final Report.
+Prof. Dr. [Head of Department Full Name]        ........................................
+Head of Department
+
+DECLARATION
+I/We declare that all information in this project report has been obtained and presented according to academic rules and ethical principles. I/We also declare that all sources that are not original to this work have been cited properly.
+Najma Mohamed
+Signature(s): ........................................
+Date: ....../....../2026
+
+ABSTRACT
+Graduation Project Final Report
+SKIN CANCER DETECTION SYSTEM USING CNN+XGBOOST AND VIT+XGBOOST WITH WEB APPLICATION
+Najma Mohamed
+Karabük University
+Faculty of Engineering
+Department of Computer Engineering
+Project Advisor: Dr. [Advisor Full Name]
+June 2026, [Total Page Number] pages
+Sample section: replace the sample text below with your own project information. Keep the abstract around 150-250 words.
+This project aims to develop a machine learning-based system for predicting student academic performance and identifying students who may need early academic support. The system uses a structured dataset containing demographic, attendance, assessment, and study-related features. The project workflow includes data cleaning, missing-value handling, feature encoding, train-test splitting, model training, and performance evaluation. Several supervised learning algorithms are considered, including Logistic Regression as a baseline classifier, Random Forest for non-linear pattern learning, and Support Vector Machine for comparison. The models are evaluated using accuracy, precision, recall, F1-score, and area under the ROC curve. A simple dashboard is proposed to display prediction results and risk categories in a form that can support academic advising. The expected contribution of this project is not to replace teacher judgment, but to provide an analytical tool that helps identify performance risks earlier and more consistently. The results show how machine learning can be applied in an educational setting when data quality, model evaluation, and ethical use of student data are carefully considered.
+Keywords: Machine learning, student performance prediction, Logistic Regression, Random Forest, academic analytics.
+
+ACKNOWLEDGEMENT
+Sample section: students may personalize this paragraph while keeping the tone formal.
+We would like to express our sincere gratitude to my parents and  to our project advisor, Dr. [Advisor Full Name], for the guidance, feedback, and support provided during the planning, implementation, and writing stages of this graduation project. We also thank the Department of Computer Engineering for providing the academic environment and resources needed to complete this work. Finally, we thank our families and friends for their continuous encouragement throughout the project period.
+
+TABLE OF CONTENTS
+TABLE OF CONTENTS
+
+APPROVAL PAGE ii
+DECLARATIONiii
+ABSTRACT     iv
+ACKNOWLEDGEMENTv
+TABLE OF CONTENTS vi
+LIST OF FIGURES vii
+LIST OF TABLESviii
+
+CHAPTER 11
+INTRODUCTION 1
+1.1. Literature Review1
+1.2. Project Objective 3
+1.3. Project Scope4
+
+CHAPTER 2  5
+MACHINE LEARNING BACKGROUND 5
+2.1. Machine Learning Classification6
+2.1.1. Data Preprocessing and Feature Engineering7
+2.1.2. Model Evaluation Metrics8
+
+CHAPTER 3  10
+SYSTEM DESIGN AND METHODOLOGY 10
+3.1. Research / System Architecture 10
+3.2. Technologies and Tools  12
+3.3. Implementation Details 14
+3.4. Testing and Evaluation 16
+
+CHAPTER 4 18
+CONCLUSION AND EVALUATION18
+4.1. Results and Discussion 18
+4.2. Conclusion and Future Work 20
+
+REFERENCES 22
+CURRICULUM VITAE 24
+APPENDICES 25
+LIST OF FIGURES
+Figure 2.1. General machine learning workflow6
+Figure 3.1. Sample research / system architecture10
+Figure 3.2. Example dashboard interface15
+
+LIST OF TABLES
+Table 3.1. Technologies and tools used in the project12
+Table 3.2. Sample evaluation plan16
+Table 4.1. Example model performance results18
+
+CHAPTER 1
+INTRODUCTION
+The use of data-driven decision support systems has increased in many areas of computer engineering, including education, healthcare, finance, cybersecurity, and transportation. In the educational domain, institutions often collect data about attendance, assignments, quiz scores, final grades, and student engagement. However, this data is frequently used only for record keeping, while its potential for early prediction and academic support remains underused. Machine learning provides methods that can learn patterns from historical data and support prediction tasks when the data is prepared and evaluated correctly.
+This sample report uses student performance prediction as an example project. Students may replace the topic with another machine learning application, such as disease prediction, spam detection, sentiment analysis, intrusion detection, house-price prediction, crop disease classification, or traffic prediction.
+1.1. Literature Review
+Sample Literature Review (LR): this is a model paragraph style. Students should add real recent studies related to their own topic and cite them consistently.
+Machine learning has been widely studied for prediction and classification tasks because it can identify patterns in structured and unstructured data. Traditional statistical models, such as Logistic Regression, are commonly used as baseline methods because their coefficients are easier to interpret and they provide a useful reference point for comparison. More complex models, such as Random Forest and Support Vector Machine, can capture non-linear relationships, but they may require more careful tuning and interpretation.
+In educational data mining, previous studies have explored student performance prediction using attendance, assessment marks, demographic information, learning management system activity, and behavioral indicators. These studies generally show that early academic indicators can be useful for identifying students at risk of low performance. However, the quality of prediction depends strongly on the dataset, feature selection, class balance, and evaluation procedure. A model with high accuracy may still be weak if it fails to correctly identify the minority group, such as students at risk.
+The main gap addressed by this project is the need for a simple, reproducible, and explainable machine learning workflow that can be understood by undergraduate students and used as a prototype decision-support tool. Instead of focusing only on model accuracy, this project also considers preprocessing steps, comparison of multiple algorithms, evaluation metrics, and ethical handling of student data.
+1.2. Project Objective
+Sample objectives: write objectives as measurable actions. Avoid vague statements such as "make a good system".
+The main objective of this project is to design and implement a machine learning-based prototype that predicts student academic performance using structured educational data.
+To collect or prepare a structured dataset containing relevant student-performance features.
+To preprocess the dataset by handling missing values, encoding categorical variables, and normalizing numerical features when required.
+To train and compare selected machine learning models, including Logistic Regression as a baseline model.
+To evaluate the models using accuracy, precision, recall, F1-score, and ROC-AUC instead of relying on accuracy alone.
+To design a simple prediction interface or dashboard that displays the predicted performance category and relevant model outputs.
+To discuss the limitations, ethical considerations, and possible future improvements of the proposed system.
+1.3. Project Scope
+Sample scope: define what the project includes and excludes.
+This project focuses on supervised machine learning for predicting student performance categories such as Low Risk, Medium Risk, and High Risk. The project includes data preprocessing, model training, model comparison, basic visualization, and a prototype interface. The project does not include automatic decision-making about student grades, disciplinary decisions, or replacement of academic advisors. The system should be used only as a support tool, and all predictions must be interpreted carefully by authorized academic staff.
+
+CHAPTER 2
+MACHINE LEARNING BACKGROUND
+This chapter explains the theoretical concepts required to understand the project. Machine learning is a branch of artificial intelligence in which algorithms learn patterns from data and use those patterns to make predictions or classifications on new data. In this project, supervised learning is used because the dataset contains input features and known target labels.
+2.1. Machine Learning Classification
+Classification is a supervised learning task where the model assigns an input sample to one of several predefined classes. In a student performance prediction system, the input may include attendance rate, assignment average, quiz score, number of missed classes, and study-hours category. The output class may be Pass/Fail or Low/Medium/High risk. Logistic Regression can be used as a simple baseline classifier, while Random Forest can be used to model more complex relationships between the features and the target label.
+2.1.1. Data Preprocessing and Feature Engineering
+Data preprocessing is an essential step before training a machine learning model. Missing values may be replaced using mean, median, mode, or a domain-specific value. Categorical features such as gender, department, or study level must be encoded into numerical form. Feature engineering may include creating new variables, such as attendance percentage or assignment completion ratio. Poor preprocessing can lead to biased or unreliable model results even when the chosen algorithm is strong.
+2.1.2. Model Evaluation Metrics
+Evaluation metrics are used to measure how well the model performs on unseen data. Accuracy measures the overall proportion of correct predictions, but it can be misleading if the dataset is imbalanced. Precision measures how many predicted positive cases are actually positive, while recall measures how many actual positive cases are detected. F1-score balances precision and recall. ROC-AUC summarizes the model ability to separate classes across different thresholds.
+Figure 2.1. General machine learning workflow: data collection, preprocessing, feature engineering, model training, evaluation, and deployment.
+
+CHAPTER 3
+SYSTEM DESIGN AND METHODOLOGY
+This chapter describes the proposed design and implementation methodology for the machine learning-based student performance prediction system. The project follows a structured workflow beginning with dataset preparation and ending with model evaluation and prototype output presentation.
+3.1. Research / System Architecture
+Sample research architecture: this can be converted into a diagram in the final report. Replace the blocks according to your own project.
+The proposed architecture contains seven main stages: dataset input, preprocessing, feature engineering, model training, model evaluation, prediction generation, and dashboard/report output. First, the dataset is imported from a CSV file or database. Second, missing values and inconsistent records are handled. Third, selected features are transformed into a format suitable for machine learning. Fourth, the dataset is divided into training and testing sets. Fifth, multiple models are trained, including Logistic Regression, Random Forest, and Support Vector Machine. Sixth, the best model is selected based on evaluation metrics. Finally, the system displays the predicted risk level and summary results through a simple interface.
+
+Figure 3.1. Sample research / system architecture for a machine learning-based student performance prediction system.
+
+3.2. Technologies and Tools
+The following technologies and tools may be used in the implementation of the sample machine learning project.
+Tool / Technology
+Purpose in the Project
+Python
+Main programming language used for data processing, model training, and prototype development.
+Pandas
+Reading datasets, cleaning tabular data, and preparing features.
+NumPy
+Numerical operations and array handling.
+Scikit-learn
+Training machine learning models such as Logistic Regression, Random Forest, and SVM.
+Matplotlib
+Creating graphs for data exploration and evaluation results.
+SQLite / CSV
+Simple storage format for the dataset and experimental records.
+Streamlit or Flask
+Building a simple web-based interface or dashboard.
+Git / GitHub
+Version control and project documentation.
+
+Table 3.1. Technologies and tools used in the project.
+3.3. Implementation Details
+The implementation begins by importing the dataset and checking the number of records, feature names, data types, missing values, and target-label distribution. After preprocessing, the dataset is divided into training and testing subsets, for example 80% for training and 20% for testing. Logistic Regression is trained first as the baseline model because it is simple and interpretable. Random Forest and Support Vector Machine are then trained to compare whether more complex models improve performance.
+A simplified implementation workflow is shown below:
+Load the dataset from CSV or database.
+Remove duplicate records and handle missing values.
+Encode categorical features and scale numerical features when needed.
+Split the dataset into training and testing sets.
+Train Logistic Regression as the baseline model.
+Train additional models such as Random Forest and Support Vector Machine.
+Evaluate all models using the same testing set.
+Select the best model based on F1-score and ROC-AUC.
+Connect the selected model to a simple interface for user input and prediction output.
+3.4. Testing and Evaluation
+Testing should verify both the machine learning model and the software prototype. Model testing checks whether the trained model performs well on unseen data. Software testing checks whether the interface accepts valid inputs, rejects invalid inputs, and displays prediction results correctly.
+Evaluation Item
+Example Measurement
+Model accuracy
+Percentage of correct predictions on the test set.
+Precision
+Correctness of predicted at-risk cases.
+Recall
+Ability to identify actual at-risk students.
+F1-score
+Balance between precision and recall.
+ROC-AUC
+Class-separation ability across thresholds.
+Interface test
+Whether user input produces the expected output screen.
+
+Table 3.2. Sample evaluation plan for the proposed system.
+
+CHAPTER 4
+CONCLUSION AND EVALUATION
+4.1. Results and Discussion
+Sample results only: students must replace these values with their actual experimental results.
+After preprocessing and training, three models were compared on the same test set. The sample results in Table 4.1 show that Random Forest achieved the highest F1-score, while Logistic Regression provided a simpler and more interpretable baseline. These results suggest that non-linear models may capture more complex relationships in the dataset, but interpretability and ethical use remain important when the system is used in an educational context.
+Model
+Accuracy
+Precision
+Recall
+F1-score
+ROC-AUC
+Logistic Regression
+0.82
+0.78
+0.74
+0.76
+0.84
+Random Forest
+0.87
+0.84
+0.81
+0.82
+0.90
+Support Vector Machine
+0.85
+0.80
+0.78
+0.79
+0.88
+
+Table 4.1. Example model performance results. Replace these values with actual results.
+The main challenge in this type of project is not only model training, but also data quality. Missing records, inconsistent grade formats, and imbalanced target classes can affect the reliability of the prediction. Another challenge is interpretation. A prediction of "High Risk" should not be treated as a final judgment about a student. Instead, it should be used as an early signal for further academic support.
+4.2. Conclusion and Future Work
+This project demonstrated how a complete machine learning workflow can be designed for student performance prediction. The project covered dataset preparation, preprocessing, baseline modeling with Logistic Regression, comparison with other classifiers, model evaluation, and prototype dashboard design. The sample system can support academic advising by identifying students who may need attention earlier than traditional manual review.
+The main limitations are the dependence on dataset quality, the possibility of biased features, and the limited generalizability of a model trained on a small dataset. Future work may include using a larger dataset, applying cross-validation, adding explainable AI techniques such as SHAP, integrating the system with a learning management system, and testing the prototype with real users under proper privacy and ethical approval procedures.
+
+REFERENCES
+Sample references: students must replace or extend these with references directly related to their own project.
+[1] L. Breiman, "Random Forests," Machine Learning, vol. 45, pp. 5-32, 2001.
+[2] C. Cortes and V. Vapnik, "Support-vector networks," Machine Learning, vol. 20, no. 3, pp. 273-297, 1995.
+[3] F. Pedregosa et al., "Scikit-learn: Machine Learning in Python," Journal of Machine Learning Research, vol. 12, pp. 2825-2830, 2011.
+[4] S. M. Lundberg and S.-I. Lee, "A Unified Approach to Interpreting Model Predictions," in Advances in Neural Information Processing Systems, 2017.
+[5] I. H. Witten, E. Frank, M. A. Hall, and C. J. Pal, Data Mining: Practical Machine Learning Tools and Techniques, 4th ed. Morgan Kaufmann, 2016.
+
+CURRICULUM VITAE
+Najma Mohamed was born in Ethiopia. She completed primary and secondary education in Ethiopia. She is currently studying Computer Engineering at Karabük University. Her academic interests include machine learning, data science, web development, and software engineering.
+Contact Information
+Address: [Address]
+Phone: [Phone Number]
+E-mail: [E-mail Address]
+
+APPENDICES
+Appendix A. Sample Input Features
+The following features may be used in the sample project: attendance percentage, quiz average, assignment average, midterm grade, number of missed activities, study-hours category, previous semester GPA, and target performance category.
+Appendix B. Sample User Interface Description
+The prototype interface may include fields for entering student-related features and a button for generating the predicted risk level. The output area may show the predicted class, probability score, and a short note reminding users that the result is only a decision-support signal.

@@ -1,0 +1,143 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    font-family: Inter, "Segoe UI", Arial, sans-serif;
+    background-color: #07080e;
+    color: #f1f5f9;
+  }
+}
+
+@layer utilities {
+  .fade-in {
+    animation: fadeIn 0.45s ease-out;
+  }
+
+  .route-fade {
+    animation: routeFade 0.35s ease-out;
+  }
+
+  .animate-scan {
+    animation: scan 2.5s ease-in-out infinite;
+  }
+
+  .animate-pulse-green {
+    animation: pulse-green 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .animate-pulse-cyan {
+    animation: pulse-cyan 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .animate-pulse-purple {
+    animation: pulse-purple 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .animate-radar-sweep {
+    animation: radar-sweep 6s linear infinite;
+  }
+
+  /* Glassmorphism Panel styles */
+  .glass-panel {
+    background: rgba(15, 18, 30, 0.55);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+  }
+
+  .glass-panel-hover {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .glass-panel-hover:hover {
+    background: rgba(18, 22, 38, 0.65);
+    border-color: rgba(45, 212, 191, 0.25);
+    box-shadow: 0 12px 40px 0 rgba(6, 182, 212, 0.1);
+  }
+
+  /* Hud Telemetry Scanline grid */
+  .hud-grid {
+    background-size: 20px 20px;
+    background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                      linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes routeFade {
+  from {
+    opacity: 0;
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+@keyframes scan {
+  0% {
+    top: 0%;
+  }
+  50% {
+    top: 100%;
+  }
+  100% {
+    top: 0%;
+  }
+}
+
+@keyframes pulse-green {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.9);
+  }
+}
+
+@keyframes pulse-cyan {
+  0%, 100% {
+    box-shadow: 0 0 4px #06b6d4, 0 0 12px rgba(6, 182, 212, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 8px #06b6d4, 0 0 20px rgba(6, 182, 212, 0.4);
+  }
+}
+
+@keyframes pulse-purple {
+  0%, 100% {
+    box-shadow: 0 0 4px #a855f7, 0 0 12px rgba(168, 85, 247, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 8px #a855f7, 0 0 20px rgba(168, 85, 247, 0.4);
+  }
+}
+
+@keyframes radar-sweep {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
