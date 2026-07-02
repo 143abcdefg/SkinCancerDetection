@@ -1,61 +1,81 @@
-# Skin Cancer Detection System with CNN + ViT and Web Application
+# Skin Cancer Screening and Diagnostic System
 
-This repository contains the complete implementation of a **Skin Cancer Detection and Screening System**, developed as a Computer Engineering Graduation Project at **Karabük University (2026)** by **Najma Mohamed**.
+A Hybrid Deep Learning and Image Processing Framework with Web Interface
 
-The project features a hybrid machine learning classification pipeline combined with an interactive, high-tech React web application.
+This repository contains the complete implementation of an automated skin cancer screening and decision-support system. Developed as a graduation project for the Department of Computer Engineering at Karabuk University (2026), this system leverages machine learning architectures and digital image processing to assist in the early evaluation of pigmented skin lesions.
 
----
+## Project Overview
 
-## 📁 Project Structure
+Early detection of melanoma and other skin malignancies significantly improves patient outcomes. However, clinical evaluation using dermoscopic imaging can be subjective and resource-intensive. 
 
-*   **[`app/frontend-react/`](file:///Users/nujuom/Downloads/SkinCancerDetection-main/app/frontend-react/) (The Web Part)**: The frontend user interface built with React, Vite, and Tailwind CSS.
-*   **[`backend/`](file:///Users/nujuom/Downloads/SkinCancerDetection-main/backend/)**: The Python FastAPI backend serving the AI classification model, performing live image processing using OpenCV and PyTorch.
-*   **`extracted_report.txt`**: The official final graduation project report document.
-*   **`Skin_Cancer_Detection_Project_Notes.pdf`**: Project notes and presentation slides.
-*   **`tunnel_watchdog.py`**: Watchdog script for localtunnel forwarding.
+This project introduces a dual-pipeline classifier that extracts localized morphological features using a Convolutional Neural Network (CNN) and global context representations using a Vision Transformer (ViT). These deep features are combined with gradient-boosted decision trees (XGBoost) for the final classification. Additionally, the backend incorporates classical computer vision algorithms to evaluate the clinical ABCD rules of dermatology (Asymmetry, Border irregularity, and Color variation) directly from uploaded images.
 
----
+## Repository Structure
 
-## 🌟 Key Features
+The project is organized into two primary components:
 
-*   **Dual Deep Learning Pipelines**:
-    *   **CNN (MobileNetV2) + XGBoost**: Extracts local morphological textures and boundary structures.
-    *   **ViT (Vision Transformer) + XGBoost**: Extracts global patch-dependencies across the lesion surface.
-*   **Real-time Image Analysis (OpenCV)**:
-    *   **Asymmetry (A)**: Calculates the difference between the lesion mask and its flipped coordinates.
-    *   **Border Irregularity (B)**: Evaluates contour perimeter-to-area complexity.
-    *   **Color Variegation (C)**: Computes RGB standard deviations within the segmented lesion mask.
-*   **Interactive Web Dashboard (The "Web Part")**:
-    *   **Detect Page**: Drag-and-drop file upload with animated neural analysis progression.
-    *   **Split-Slider Viewer**: Compares the raw lesion image side-by-side with the attention heatmap.
-    *   **Risk Gauge**: Visualizes the malignant probability with a circular gauge interface.
-    *   **Clinical Insights**: Displays morphological ratings matching the ABCDE rules of dermatology.
+*   **app/frontend-react/**: The client-side web application built with React, Vite, and Tailwind CSS. It handles image uploads, displays diagnostic metrics, and provides an interactive visualization interface.
+*   **backend/**: The Python-based API served via FastAPI. It runs the model inference pipeline and executes image segmentation and feature analysis using PyTorch and OpenCV.
 
----
+Other contents include the graduation project report text (extracted_report.txt) and helper scripts for network configuration (tunnel_watchdog.py).
 
-## 🚀 How to Run the Project Locally
+## Technical Features
 
-### 1. Start the Python Backend
-Navigate to the backend directory, install dependencies, and run the FastAPI server:
-```bash
-cd backend
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-python main.py
-```
-*The backend will run on `http://localhost:8000`.*
+### Multi-Architecture Classification Pipelines
+*   **CNN Branch**: Uses a MobileNetV2 backbone to extract localized textures, boundary coordinates, and structural details.
+*   **ViT Branch**: Employs self-attention mechanisms to map global patch relationships across the lesion surface, optimizing texture analysis.
+*   **Ensemble Fusion**: Both branches integrate an XGBoost classification layer, combining deep features with rule-based metrics to generate final risk probabilities.
 
-### 2. Start the React Frontend
-Open a new terminal window, navigate to the frontend directory, install npm packages, and start the development server:
-```bash
-cd app/frontend-react
-npm install
-npm run dev
-```
-*The frontend will run on `http://localhost:5173`. Open this URL in your web browser!*
+### Computer Vision Module (ABCD Analysis)
+*   **Asymmetry (A)**: Segments the lesion boundary and calculates the geometric discrepancy between the original mask and its horizontal and vertical reflections.
+*   **Border Irregularity (B)**: Evaluates boundary complexity by measuring the contour circularity and compactness ratio.
+*   **Color Variegation (C)**: Measures the standard deviation of RGB color channels strictly within the segmented lesion boundary.
 
----
+### Interactive User Interface
+*   **Workspace**: Drag-and-drop file upload with a detailed step-by-step diagnostic progress indicator.
+*   **Comparative View**: A split-screen slider comparing the original lesion image alongside the attention heatmap representation.
+*   **Risk Metric Visualization**: A circular gauge showing the probability of malignancy alongside ratings based on clinical ABCDE criteria.
 
-## ⚖️ Disclaimer
-This application is designed as an educational prototype for clinical decision-support. It is not a replacement for professional medical diagnosis or consulting.
+## Installation and Setup
+
+### 1. Backend API Configuration
+The backend server runs on Python 3 and requires Uvicorn to serve the API.
+
+1. Navigate to the backend directory:
+   ```bash
+   cd backend
+   ```
+2. Create and activate a virtual environment:
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
+3. Install the dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+4. Start the server:
+   ```bash
+   python main.py
+   ```
+The API will run on http://localhost:8000.
+
+### 2. Frontend Configuration
+The frontend application requires Node.js to install dependencies and run the development server.
+
+1. Navigate to the frontend directory:
+   ```bash
+   cd app/frontend-react
+   ```
+2. Install the package dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the local Vite server:
+   ```bash
+   npm run dev
+   ```
+Open the printed local address (typically http://localhost:5173) in your browser to access the interface.
+
+## Disclaimer
+This application is an engineering prototype designed for educational and decision-support purposes. It is not an approved medical device and should not be used as a substitute for professional clinical diagnosis.
