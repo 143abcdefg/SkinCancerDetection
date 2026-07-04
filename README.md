@@ -2,6 +2,11 @@
 
 Inference project for skin lesion prediction using hybrid CNN + XGBoost and ViT + XGBoost pipelines.
 
+### 🌐 Live Production Links
+*   **Web Application**: [https://skin-cancer-detection-nine.vercel.app](https://skin-cancer-detection-nine.vercel.app)
+*   **FastAPI Backend**: [https://skin-cancer-api-4r3k.onrender.com](https://skin-cancer-api-4r3k.onrender.com)
+
+
 ## Stack
 
 *   FastAPI backend for model serving and image processing
