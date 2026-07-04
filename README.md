@@ -1,81 +1,108 @@
-# Skin Cancer Screening and Diagnostic System
+# Skin Cancer Detection (Hybrid Inference)
 
-A Hybrid Deep Learning and Image Processing Framework with Web Interface
+Inference project for skin lesion prediction using hybrid CNN + XGBoost and ViT + XGBoost pipelines.
 
-This repository contains the complete implementation of an automated skin cancer screening and decision-support system. Developed as a graduation project for the Department of Computer Engineering at Karabuk University (2026), this system leverages machine learning architectures and digital image processing to assist in the early evaluation of pigmented skin lesions.
+## Stack
 
-## Project Overview
+*   FastAPI backend for model serving and image processing
+*   React + Vite frontend for the web application user interface
+*   TensorFlow/Keras Vision Transformer (ViT) + PyTorch MobileNetV2 + XGBoost models for predictions
+*   OpenCV + Pillow + NumPy for lesion segmentation and boundary analysis
 
-Early detection of melanoma and other skin malignancies significantly improves patient outcomes. However, clinical evaluation using dermoscopic imaging can be subjective and resource-intensive. 
+## Clean project structure
 
-This project introduces a dual-pipeline classifier that extracts localized morphological features using a Convolutional Neural Network (CNN) and global context representations using a Vision Transformer (ViT). These deep features are combined with gradient-boosted decision trees (XGBoost) for the final classification. Additionally, the backend incorporates classical computer vision algorithms to evaluate the clinical ABCD rules of dermatology (Asymmetry, Border irregularity, and Color variation) directly from uploaded images.
+```text
+README.md
+extracted_report.txt
+Skin_Cancer_Detection_Project_Notes.pdf
+tunnel_watchdog.py
+app/
+  frontend-react/
+    src/
+    package.json
+    vite.config.js
+backend/
+  main.py
+  classifier.py
+  requirements.txt
+  best_vit_skin_cancer.h5
+  best_xgb.json
+  config.json
+```
 
-## Repository Structure
+## Setup
 
-The project is organized into two primary components:
+Navigate to the backend directory, initialize the environment, and install dependencies:
+```bash
+cd backend
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
 
-*   **app/frontend-react/**: The client-side web application built with React, Vite, and Tailwind CSS. It handles image uploads, displays diagnostic metrics, and provides an interactive visualization interface.
-*   **backend/**: The Python-based API served via FastAPI. It runs the model inference pipeline and executes image segmentation and feature analysis using PyTorch and OpenCV.
+## Run backend
 
-Other contents include the graduation project report text (extracted_report.txt) and helper scripts for network configuration (tunnel_watchdog.py).
+To start the FastAPI backend server:
+```bash
+python main.py
+```
+*   Health check: http://127.0.0.1:8000/health
+*   Prediction endpoint: http://127.0.0.1:8000/predict
 
-## Technical Features
+## Run frontend
 
-### Multi-Architecture Classification Pipelines
-*   **CNN Branch**: Uses a MobileNetV2 backbone to extract localized textures, boundary coordinates, and structural details.
-*   **ViT Branch**: Employs self-attention mechanisms to map global patch relationships across the lesion surface, optimizing texture analysis.
-*   **Ensemble Fusion**: Both branches integrate an XGBoost classification layer, combining deep features with rule-based metrics to generate final risk probabilities.
+To start the React development server:
+```bash
+cd app/frontend-react
+npm install
+npm run dev
+```
+The frontend application runs at http://127.0.0.1:5173.
 
-### Computer Vision Module (ABCD Analysis)
-*   **Asymmetry (A)**: Segments the lesion boundary and calculates the geometric discrepancy between the original mask and its horizontal and vertical reflections.
-*   **Border Irregularity (B)**: Evaluates boundary complexity by measuring the contour circularity and compactness ratio.
-*   **Color Variegation (C)**: Measures the standard deviation of RGB color channels strictly within the segmented lesion boundary.
+## Prediction endpoint
 
-### Interactive User Interface
-*   **Workspace**: Drag-and-drop file upload with a detailed step-by-step diagnostic progress indicator.
-*   **Comparative View**: A split-screen slider comparing the original lesion image alongside the attention heatmap representation.
-*   **Risk Metric Visualization**: A circular gauge showing the probability of malignancy alongside ratings based on clinical ABCDE criteria.
+POST `/predict` (multipart form-data):
 
-## Installation and Setup
+*   **Field name**: `image` (JPEG/PNG image file)
+*   **Field name**: `model_type` (string, either `cnn` or `vit`)
 
-### 1. Backend API Configuration
-The backend server runs on Python 3 and requires Uvicorn to serve the API.
+**Output format**:
+```json
+{
+  "prediction": "benign" or "malignant",
+  "confidence": 0.0 to 100.0,
+  "model_used": "cnn" or "vit",
+  "cnn_score": 0.0 to 1.0,
+  "xgb_score": 0.0 to 1.0
+}
+```
 
-1. Navigate to the backend directory:
-   ```bash
-   cd backend
-   ```
-2. Create and activate a virtual environment:
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate
-   ```
-3. Install the dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-4. Start the server:
-   ```bash
-   python main.py
-   ```
-The API will run on http://localhost:8000.
+## Notes
 
-### 2. Frontend Configuration
-The frontend application requires Node.js to install dependencies and run the development server.
+### Required Model Files (ViT Branch)
+*   `backend/best_vit_skin_cancer.h5`
+*   `backend/best_xgb.json`
+*   `backend/config.json`
 
-1. Navigate to the frontend directory:
-   ```bash
-   cd app/frontend-react
-   ```
-2. Install the package dependencies:
-   ```bash
-   npm install
-   ```
-3. Start the local Vite server:
-   ```bash
-   npm run dev
-   ```
-Open the printed local address (typically http://localhost:5173) in your browser to access the interface.
+### Ensemble Rules
 
-## Disclaimer
-This application is an engineering prototype designed for educational and decision-support purposes. It is not an approved medical device and should not be used as a substitute for professional clinical diagnosis.
+*   **ViT + XGBoost Branch**:
+    *   Combined Score = (ViT Probability * 0.55) + (XGBoost Probability * 0.45)
+    *   Combined Score >= 0.42 => malignant, else benign
+*   **CNN + XGBoost Branch (Local)**:
+    *   Loads local `skin_cancer_cnn_lstm.h5` model (uses class probabilities)
+    *   Combined Score = (CNN Probability * 0.80) + (XGBoost Probability * 0.20)
+    *   Combined Score >= 0.35 => malignant, else benign
+    *   *If the CNN file is missing locally, the system runs an OpenCV-based boundary, asymmetry, and color extraction fallback.*
+
+This application is for educational purposes and is not a medical diagnosis tool.
+
+## Author
+
+**Najma Mohamed**
+
+*   CNN + XGBoost and ViT + XGBoost model development and training
+*   Backend API development using FastAPI and OpenCV
+*   Frontend development using React and Tailwind CSS
+*   Ensemble model integration and threshold tuning
+*   Application deployment configurations
