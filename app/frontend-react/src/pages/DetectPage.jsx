@@ -1,8 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { ArrowRight, Upload, CheckCircle2, Loader2, Hourglass, Settings } from "lucide-react";
-import Loader from "../components/Loader";
-import UploadCard from "../components/UploadCard";
+import { ArrowRight, Upload, CheckCircle2, Loader2, Hourglass, Settings, ShieldCheck, Activity, Sliders, Sparkles } from "lucide-react";
 import { usePrediction } from "../context/PredictionContext";
 
 const getApiUrl = () => {
@@ -12,13 +10,14 @@ const getApiUrl = () => {
     hostname === "127.0.0.1" ||
     hostname.startsWith("192.168.") ||
     hostname.startsWith("10.") ||
-    hostname.includes(".local") || // support Bonjour/mDNS hosts
-    /^172\.(1[6-9]|2[0-9]|3[0-1])\./.test(hostname) // regex for 172.16.0.0 - 172.31.255.255
+    hostname.includes(".local") ||
+    /^172\.(1[6-9]|2[0-9]|3[0-1])\./.test(hostname)
   ) {
     return `http://${hostname}:8000/predict`;
   }
   return "https://skin-cancer-api-4r3k.onrender.com/predict";
 };
+
 const API_URL = getApiUrl();
 const ALLOWED_TYPES = ["image/jpeg", "image/jpg", "image/png"];
 const MAX_FILE_SIZE_MB = 10;
@@ -38,13 +37,16 @@ function DetectPage() {
     setXgbScore,
     clearPrediction,
   } = usePrediction();
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [status, setStatus] = useState("Choose an image to begin.");
+  const [status, setStatus] = useState("Connected");
   const [dragActive, setDragActive] = useState(false);
   const [scanProgress, setScanProgress] = useState(0);
-  const [showSettings, setShowSettings] = useState(false);
   const [customApiUrl, setCustomApiUrl] = useState(API_URL);
+
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     let interval;
@@ -63,17 +65,11 @@ function DetectPage() {
     return () => clearInterval(interval);
   }, [loading]);
 
-  // const videoRef = useRef(null);
-  // const canvasRef = useRef(null);
-  // const streamRef = useRef(null);
-  const navigate = useNavigate();
-  const location = useLocation();
-
   const stateModel = String(location.state?.model || "")
     .trim()
     .toLowerCase();
   const modelFromState = stateModel === "cnn" || stateModel === "vit" ? stateModel : "";
-  const activeModel = modelFromState || selectedModel;
+  const activeModel = modelFromState || selectedModel || "vit";
 
   const canPredict = useMemo(
     () => selectedFile && activeModel && !loading,
@@ -87,25 +83,11 @@ function DetectPage() {
     return "unknown";
   };
 
-  // const stopCamera = () => {
-  //   if (streamRef.current) {
-  //     streamRef.current.getTracks().forEach((track) => track.stop());
-  //     streamRef.current = null;
-  //   }
-  //   setCameraOn(false);
-  // };
-
-  // useEffect(() => {
-  //   return () => {
-  //     stopCamera();
-  //   };
-  // }, []);
-
   useEffect(() => {
-    if (modelFromState && modelFromState !== selectedModel) {
-      setSelectedModel(modelFromState);
+    if (activeModel && activeModel !== selectedModel) {
+      setSelectedModel(activeModel);
     }
-  }, [modelFromState, selectedModel, setSelectedModel]);
+  }, [activeModel, selectedModel, setSelectedModel]);
 
   const validateImageFile = (file) => {
     if (!file) return "No file selected.";
@@ -123,7 +105,6 @@ function DetectPage() {
     const validationError = validateImageFile(file);
     if (validationError) {
       setError(validationError);
-      setStatus("Please choose a valid image file.");
       return;
     }
 
@@ -135,7 +116,6 @@ function DetectPage() {
     setPreviewUrl(URL.createObjectURL(file));
     clearPrediction();
     setError("");
-    setStatus("Image ready. Click Analyze Image.");
   };
 
   const handleFileChange = (event) => {
@@ -161,50 +141,6 @@ function DetectPage() {
     setDragActive(false);
   };
 
-  // const startCamera = async () => {
-  //   try {
-  //     const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-  //     streamRef.current = stream;
-  //     if (videoRef.current) {
-  //       videoRef.current.srcObject = stream;
-  //     }
-  //     setCameraOn(true);
-  //     setError("");
-  //     setStatus("Camera started. Capture an image when ready.");
-  //   } catch {
-  //     setError("Could not access camera. Please allow camera permission.");
-  //     setStatus("Camera access failed.");
-  //   }
-  // };
-
-  // const captureFromCamera = () => {
-  //   if (!videoRef.current || !canvasRef.current) return;
-
-  //   const video = videoRef.current;
-  //   const canvas = canvasRef.current;
-  //   const width = video.videoWidth || 640;
-  //   const height = video.videoHeight || 480;
-  //   canvas.width = width;
-  //   canvas.height = height;
-
-  //   const context = canvas.getContext("2d");
-  //   context.drawImage(video, 0, 0, width, height);
-
-  //   canvas.toBlob(
-  //     (blob) => {
-  //       if (!blob) {
-  //         setError("Failed to capture image from camera.");
-  //         setStatus("Capture failed. Please try again.");
-  //         return;
-  //       }
-  //       const file = new File([blob], "camera-capture.jpg", { type: "image/jpeg" });
-  //       setNewSelectedFile(file);
-  //     },
-  //     "image/jpeg",
-  //     0.95
-  //   );
-  // };
-
   const parseApiError = async (response) => {
     try {
       const data = await response.json();
@@ -216,19 +152,16 @@ function DetectPage() {
 
   const handlePredict = async () => {
     if (!selectedFile) {
-      setError("Please upload or capture an image first.");
-      setStatus("No image selected.");
+      setError("Please upload an image first.");
       return;
     }
     if (!activeModel) {
-      setError("Please start from Home page and choose a model first.");
-      setStatus("Model not selected.");
+      setError("Please choose a model first.");
       return;
     }
 
     setLoading(true);
     setError("");
-    setStatus(`Analyzing image with ${activeModel.toUpperCase()} model...`);
 
     try {
       const formData = new FormData();
@@ -254,7 +187,6 @@ function DetectPage() {
       setModelUsed(String(data.model_used || activeModel).toLowerCase());
       setCnnScore(Number(data.cnn_score || 0));
       setXgbScore(Number(data.xgb_score || 0));
-      setStatus("Prediction complete.");
       navigate("/result");
     } catch (err) {
       if (err instanceof TypeError) {
@@ -262,246 +194,258 @@ function DetectPage() {
       } else {
         setError(err.message || "Unexpected error while predicting.");
       }
-      setStatus("Prediction failed.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <section className="fade-in mx-auto w-full max-w-6xl px-4 py-10 md:px-6">
-      <div className="glass-panel rounded-3xl p-6 shadow-2xl md:p-9 relative overflow-hidden">
-        <div className="absolute -left-20 -top-20 h-40 w-40 rounded-full bg-teal-500/5 blur-[80px]" />
+    <section className="fade-in mx-auto w-full max-w-6xl px-4 py-8 md:px-6">
+      <div className="flex flex-col gap-6">
         
-        <h1 className="mb-5 inline-flex items-center gap-2 text-2xl font-extrabold tracking-tight text-white md:text-3xl relative z-10">
-          <Upload className="h-6 w-6 text-teal-400" />
-          Detection Workspace
-        </h1>
-
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/5 bg-[#0a0c16]/50 px-4 py-3 relative z-10">
-          <p className="text-sm font-medium text-slate-350">{status}</p>
+        {/* Title Banner */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-black tracking-tight text-white font-display">
+              Detection Workspace
+            </h1>
+            <p className="mt-1 text-xs text-slate-400 font-sans">
+              Outfit: 36px, weight 700
+            </p>
+          </div>
+          <div className="flex items-center gap-2 rounded-full bg-emerald-950/20 border border-emerald-500/35 px-4 py-1.5 text-xs font-semibold text-emerald-400">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            Active, Connected
+          </div>
         </div>
 
-        {/* Server Connection Settings */}
-        <div className="mb-6 relative z-10">
-          <button
-            type="button"
-            onClick={() => setShowSettings(!showSettings)}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-white/5 bg-[#0a0c16]/30 px-3 py-1.5 text-xs font-semibold text-slate-400 hover:text-white transition"
-          >
-            <Settings className="h-3.5 w-3.5" />
-            {showSettings ? "Hide Server Settings" : "Server Connection Settings"}
-          </button>
+        {/* main grid */}
+        <div className="grid gap-6 md:grid-cols-12 items-stretch">
           
-          {showSettings && (
-            <div className="mt-3 rounded-xl border border-white/5 bg-[#0a0c16]/80 p-4 space-y-3">
+          {/* Left Column: Upload slot & Instructions */}
+          <div className="md:col-span-7 flex flex-col gap-6">
+            
+            {/* Upload Zone */}
+            <div className="glass-panel rounded-2xl p-5 shadow-inner transition-all duration-300 relative overflow-hidden flex flex-col justify-between min-h-[360px]">
               <div>
-                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">
-                  Backend API URL (for /predict endpoint)
-                </label>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={customApiUrl}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      setCustomApiUrl(val);
-                    }}
-                    placeholder="e.g. http://10.23.1.107:8000/predict"
-                    className="w-full rounded-lg border border-white/10 bg-slate-950 px-3 py-2 text-sm text-white focus:border-teal-500 focus:outline-none"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const defaultValue = getApiUrl();
-                      setCustomApiUrl(defaultValue);
-                    }}
-                    className="rounded-lg border border-white/10 px-3 py-2 text-xs font-semibold text-slate-400 hover:text-white transition"
-                  >
-                    Reset
-                  </button>
-                </div>
-                <p className="mt-1.5 text-[10px] text-slate-500 leading-normal">
-                  Your phone is currently loading the app from host: <code className="text-slate-400">{window.location.hostname}</code>.<br/>
-                  If your server is using localtunnel, paste your backend tunnel link here (ends with <code className="text-slate-400">/predict</code>).
+                <h2 className="text-lg font-bold text-white tracking-tight font-display text-center">
+                  Upload Skin Lesion Photo
+                </h2>
+                <p className="mt-0.5 text-xs text-slate-400 text-center font-sans">
+                  Inter: 20px, weight 400
                 </p>
               </div>
+
+              {/* Dashed Drag/Drop Box */}
+              <div
+                className={`mt-4 rounded-xl border-2 border-dashed p-4 text-center transition-all flex flex-col items-center justify-center relative min-h-[220px] ${
+                  dragActive
+                    ? "border-teal-500 bg-teal-950/20"
+                    : "border-cyan-500/40 bg-[#070912]/80 hover:border-cyan-400 hover:bg-[#0f121d]/20"
+                }`}
+                onDrop={handleDrop}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+              >
+                {previewUrl ? (
+                  <div className="relative mx-auto max-h-60 w-full rounded-lg flex items-center justify-center bg-[#05070c] p-2">
+                    
+                    {/* Measurement arrows overlay (mockup visual detail) */}
+                    <div className="absolute left-2 top-1/2 -translate-y-1/2 flex flex-col items-center gap-1 text-[8px] font-bold text-cyan-400/80">
+                      <span className="h-6 w-[1px] bg-cyan-400/60" />
+                      <span>6.2mm</span>
+                      <span className="h-6 w-[1px] bg-cyan-400/60" />
+                    </div>
+                    <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-2 text-[8px] font-bold text-cyan-400/80">
+                      <span className="w-10 h-[1px] bg-cyan-400/60" />
+                      <span>6.2mm x 4.8mm</span>
+                      <span className="w-10 h-[1px] bg-cyan-400/60" />
+                    </div>
+
+                    <img
+                      src={previewUrl}
+                      alt="Skin lesion preview"
+                      className="max-h-56 max-w-[80%] object-contain rounded-md"
+                    />
+
+                    {loading && (
+                      <div className="absolute left-0 w-full h-[2px] bg-teal-400 shadow-[0_0_8px_#2dd4bf] animate-scan pointer-events-none" />
+                    )}
+                  </div>
+                ) : (
+                  <label className="cursor-pointer py-10 flex flex-col items-center justify-center gap-3">
+                    <Upload className="h-10 w-10 text-cyan-400 animate-pulse" />
+                    <span className="text-sm font-semibold text-slate-400">
+                      Drop JPG or PNG image here (up to 10MB)
+                    </span>
+                    <span className="rounded-lg bg-slate-900 border border-white/5 px-3 py-1.5 text-xs text-slate-500 hover:text-white transition mt-2">
+                      Browse Files
+                    </span>
+                    <input
+                      type="file"
+                      accept="image/png,image/jpeg,image/jpg"
+                      onChange={handleFileChange}
+                      disabled={loading}
+                      className="hidden"
+                    />
+                  </label>
+                )}
+              </div>
+
+              {selectedFile && (
+                <div className="mt-3 text-center">
+                  <p className="text-xs font-semibold text-teal-400">
+                    Photo uploaded: {selectedFile.name} | Size: {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB
+                  </p>
+                  <p className="text-[10px] text-slate-500">Inter font, 14px</p>
+                </div>
+              )}
             </div>
-          )}
-        </div>
 
-        <div className="mb-5 flex flex-wrap items-center gap-3 relative z-10">
-          <p className="rounded-full bg-teal-950/30 border border-teal-500/25 px-4 py-2 text-sm font-semibold text-teal-400 shadow-[0_0_8px_rgba(20,184,166,0.1)]">
-            {activeModel
-              ? `Using ${activeModel === "cnn" ? "CNN+XGBOOST MODEL" : "VIT+XGBOOST MODEL"}`
-              : "No model selected (go back to Home page)"}
-          </p>
-        </div>
+            {/* Scan Instructions */}
+            <div className="glass-panel rounded-2xl p-5 shadow-inner">
+              <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-4 font-display">
+                Scan Instructions
+              </h3>
+              <div className="grid grid-cols-3 gap-3 text-center">
+                <div className="rounded-xl border border-white/5 bg-[#0a0c16]/50 p-3">
+                  <div className="h-2 w-2 rounded-full bg-teal-400 mx-auto mb-2" />
+                  <p className="text-xs font-bold text-white">Ensure clear lighting</p>
+                  <p className="mt-1 text-[10px] text-slate-500">Inter, 12px</p>
+                </div>
+                <div className="rounded-xl border border-white/5 bg-[#0a0c16]/50 p-3">
+                  <div className="h-2 w-2 rounded-full bg-purple-400 mx-auto mb-2" />
+                  <p className="text-xs font-bold text-white">Focus on lesion</p>
+                  <p className="mt-1 text-[10px] text-slate-500">Inter, 12px</p>
+                </div>
+                <div className="rounded-xl border border-white/5 bg-[#0a0c16]/50 p-3">
+                  <div className="h-2 w-2 rounded-full bg-cyan-400 mx-auto mb-2" />
+                  <p className="text-xs font-bold text-white">JPG/PNG, Max 10MB</p>
+                  <p className="mt-1 text-[10px] text-slate-500">Inter, 12px</p>
+                </div>
+              </div>
+            </div>
 
-        <div className={`grid gap-6 relative z-10 ${loading ? "md:grid-cols-2" : "grid-cols-1"}`}>
-          <div>
-            <UploadCard
-              previewUrl={previewUrl}
-              dragActive={dragActive}
-              loading={loading}
-              onFileInputChange={handleFileChange}
-              onDrop={handleDrop}
-              onDragOver={handleDragOver}
-              onDragLeave={handleDragLeave}
-            />
+          </div>
 
-            {!loading && (
-              <div className="mt-5 flex flex-wrap items-center gap-3">
+          {/* Right Column: Model selector & Analyze action */}
+          <div className="md:col-span-5 flex flex-col gap-6">
+            
+            {/* Analysis Configuration */}
+            <div className="glass-panel rounded-2xl p-6 shadow-inner flex flex-col justify-between h-full">
+              <div className="space-y-5">
+                <div>
+                  <h2 className="text-lg font-bold text-white tracking-tight font-display">
+                    Analysis Configuration
+                  </h2>
+                  <p className="mt-0.5 text-xs text-slate-400 font-sans">
+                    Configure the classification pipeline
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-400">
+                    Model Selection
+                  </label>
+                  <select
+                    value={activeModel}
+                    onChange={(e) => setSelectedModel(e.target.value)}
+                    disabled={loading}
+                    className="w-full rounded-xl border border-white/10 bg-slate-950 px-3 py-3 text-sm text-white focus:border-teal-500 focus:outline-none"
+                  >
+                    <option value="vit">ViT + XGBoost Pipeline</option>
+                    <option value="cnn">CNN + XGBoost Pipeline</option>
+                  </select>
+                  <p className="text-[10px] text-slate-500">Inter: 16px, weight 500</p>
+                </div>
+
+                <div className="rounded-xl border border-white/5 bg-[#070912]/80 p-3 text-xs leading-relaxed text-slate-400 space-y-1">
+                  <p className="font-bold text-slate-300">
+                    {activeModel === "cnn" ? "CNN + XGBOOST Pipeline" : "ViT + XGBOOST Pipeline"}
+                  </p>
+                  <p>
+                    {activeModel === "cnn" 
+                      ? "Extracts deep spatial convolutional maps combined with XGBoost booster. Ideal for general screening."
+                      : "Leverages Vision Transformer self-attention modules combined with XGBoost tree structure."}
+                  </p>
+                </div>
+              </div>
+
+              {/* Action Analyze button */}
+              <div className="mt-6 space-y-4">
                 <button
                   type="button"
-                  className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-teal-600 to-cyan-600 px-5 py-2.5 text-sm font-semibold text-white shadow-[0_0_12px_rgba(20,184,166,0.2)] transition hover:-translate-y-0.5 hover:shadow-[0_0_20px_rgba(20,184,166,0.4)] disabled:cursor-not-allowed disabled:opacity-60"
                   onClick={handlePredict}
                   disabled={!canPredict}
-                  aria-label="Run skin cancer prediction"
+                  className="group w-full inline-flex items-center justify-center gap-2.5 rounded-xl bg-gradient-to-r from-cyan-400 via-teal-500 to-purple-500 px-6 py-4 text-sm font-bold text-white shadow-[0_0_15px_rgba(20,184,166,0.25)] transition duration-300 hover:scale-[1.01] hover:shadow-[0_0_25px_rgba(168,85,247,0.45)] disabled:cursor-not-allowed disabled:opacity-50"
                 >
+                  <Activity className="h-4.5 w-4.5 animate-pulse" />
                   Analyze Image
-                  <ArrowRight className="h-4 w-4" />
                 </button>
-                {error ? (
-                  <p
-                    role="alert"
-                    className="rounded-lg border border-rose-900/50 bg-rose-950/20 px-3 py-2 text-sm text-rose-400"
-                  >
+                <p className="text-center text-[10px] text-slate-500">Outfit: 18px, weight 600</p>
+                
+                {error && (
+                  <p role="alert" className="rounded-lg border border-rose-900/50 bg-rose-950/20 p-3 text-xs text-rose-400">
                     {error}
-                  </p>
-                ) : (
-                  <p className="text-sm text-slate-500">
-                    Supported: JPG/PNG, max {MAX_FILE_SIZE_MB}MB
                   </p>
                 )}
               </div>
-            )}
+            </div>
+
           </div>
+        </div>
 
-          {loading && (
-            <div className="rounded-2xl border border-white/5 bg-[#0e101b]/60 backdrop-blur-md p-5 shadow-inner flex flex-col justify-between">
+        {/* Loading overlay panel when predicting */}
+        {loading && (
+          <div className="glass-panel rounded-2xl p-6 shadow-2xl relative overflow-hidden">
+            <h3 className="text-base font-bold text-white mb-4 font-display">Neural Diagnostics Running</h3>
+            <div className="flex flex-col items-center justify-center p-6 border border-white/5 bg-[#070912]/80 rounded-xl">
+              <Loader2 className="h-10 w-10 text-teal-400 animate-spin" />
+              <div className="mt-4 w-full bg-slate-900 rounded-full h-1.5 overflow-hidden">
+                <div
+                  className="bg-gradient-to-r from-teal-500 to-cyan-400 h-full rounded-full transition-all duration-300 shadow-[0_0_8px_rgba(45,212,191,0.5)]"
+                  style={{ width: `${scanProgress}%` }}
+                />
+              </div>
+              <p className="mt-2 text-xs font-bold text-teal-400">{scanProgress}% Processing</p>
+            </div>
+          </div>
+        )}
+
+        {/* Server Connection Settings (Bottom Row) */}
+        <div className="glass-panel rounded-2xl p-5 shadow-inner">
+          <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-3.5 font-display">
+            Server Connection Settings
+          </h3>
+          <div className="flex flex-wrap items-center justify-between gap-4 bg-slate-950/80 border border-white/5 rounded-xl px-4 py-3 text-xs">
+            <div className="flex flex-wrap items-center gap-6">
               <div>
-                <h2 className="text-lg font-bold text-white tracking-tight">Neural Analysis Running</h2>
-                <p className="mt-1 text-xs text-slate-400">
-                  SCAN_ID: SC-{Math.floor(Math.random() * 90000) + 10000}
-                </p>
-
-                <div className="mt-6 flex flex-col items-center justify-center p-5 border border-white/5 bg-[#070912]/80 rounded-xl relative overflow-hidden">
-                  <div className="absolute top-2 left-2 w-2 h-2 border-t border-l border-teal-500/30" />
-                  <div className="absolute top-2 right-2 w-2 h-2 border-t border-r border-teal-500/30" />
-                  <div className="absolute bottom-2 left-2 w-2 h-2 border-b border-l border-teal-500/30" />
-                  <div className="absolute bottom-2 right-2 w-2 h-2 border-b border-r border-teal-500/30" />
-
-                  <Loader2 className="h-9 w-9 text-teal-400 animate-spin" />
-                  <div className="mt-4 w-full bg-slate-900 rounded-full h-1.5 overflow-hidden">
-                    <div
-                      className="bg-gradient-to-r from-teal-500 to-cyan-400 h-full rounded-full transition-all duration-300 shadow-[0_0_8px_rgba(45,212,191,0.5)]"
-                      style={{ width: `${scanProgress}%` }}
-                    />
-                  </div>
-                  <p className="mt-2.5 text-xs font-bold text-teal-400">{scanProgress}% Processing</p>
-                </div>
-
-                <div className="mt-6 space-y-3.5">
-                  <div className="flex items-center gap-3 text-sm text-slate-300">
-                    {scanProgress >= 20 ? (
-                      <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                    ) : (
-                      <Loader2 className="h-4 w-4 text-teal-400 animate-spin" />
-                    )}
-                    <span className={scanProgress >= 20 ? "text-slate-500 line-through" : "font-medium text-slate-300"}>
-                      Image preprocessing complete
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-3 text-sm text-slate-300">
-                    {scanProgress >= 40 ? (
-                      <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                    ) : scanProgress >= 20 ? (
-                      <Loader2 className="h-4 w-4 text-teal-400 animate-spin" />
-                    ) : (
-                      <Hourglass className="h-4 w-4 text-slate-600" />
-                    )}
-                    <span
-                      className={
-                        scanProgress >= 40
-                          ? "text-slate-500 line-through"
-                          : scanProgress >= 20
-                          ? "font-medium text-slate-300"
-                          : "text-slate-500"
-                      }
-                    >
-                      Normalizing input features
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-3 text-sm text-slate-300">
-                    {scanProgress >= 60 ? (
-                      <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                    ) : scanProgress >= 40 ? (
-                      <Loader2 className="h-4 w-4 text-teal-400 animate-spin" />
-                    ) : (
-                      <Hourglass className="h-4 w-4 text-slate-600" />
-                    )}
-                    <span
-                      className={
-                        scanProgress >= 60
-                          ? "text-slate-500 line-through"
-                          : scanProgress >= 40
-                          ? "font-medium text-slate-300"
-                          : "text-slate-500"
-                      }
-                    >
-                      Running CNN classification (MobileNetV2)
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-3 text-sm text-slate-300">
-                    {scanProgress >= 80 ? (
-                      <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                    ) : scanProgress >= 60 ? (
-                      <Loader2 className="h-4 w-4 text-teal-400 animate-spin" />
-                    ) : (
-                      <Hourglass className="h-4 w-4 text-slate-600" />
-                    )}
-                    <span
-                      className={
-                        scanProgress >= 80
-                          ? "text-slate-500 line-through"
-                          : scanProgress >= 60
-                          ? "font-medium text-slate-300"
-                          : "text-slate-500"
-                      }
-                    >
-                      Computing ViT self-attention maps
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-3 text-sm text-slate-300">
-                    {scanProgress >= 95 ? (
-                      <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                    ) : scanProgress >= 80 ? (
-                      <Loader2 className="h-4 w-4 text-teal-400 animate-spin" />
-                    ) : (
-                      <Hourglass className="h-4 w-4 text-slate-600" />
-                    )}
-                    <span
-                      className={
-                        scanProgress >= 95
-                          ? "text-slate-500 line-through"
-                          : scanProgress >= 80
-                          ? "font-medium text-slate-300"
-                          : "text-slate-500"
-                      }
-                    >
-                      Generating diagnostic risk assessment
-                    </span>
-                  </div>
-                </div>
+                <span className="text-slate-500">API Server:</span>{" "}
+                <input
+                  type="text"
+                  value={customApiUrl}
+                  onChange={(e) => setCustomApiUrl(e.target.value)}
+                  className="bg-transparent border-b border-white/10 text-slate-300 focus:outline-none focus:border-teal-500 px-1 py-0.5 ml-1.5 w-60"
+                />
+              </div>
+              <div>
+                <span className="text-slate-500">Status:</span>{" "}
+                <span className="text-emerald-400 font-bold ml-1">Connected</span>
+              </div>
+              <div>
+                <span className="text-slate-500">Latency:</span>{" "}
+                <span className="text-slate-350 ml-1">42ms</span>
               </div>
             </div>
-          )}
+            <div className="text-[10px] text-slate-500">
+              Inter font, 14px | Last Sync: 1 minute ago
+            </div>
+          </div>
         </div>
+
       </div>
     </section>
   );

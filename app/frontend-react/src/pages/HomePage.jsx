@@ -41,26 +41,35 @@ function HomePage() {
           <div className="relative z-10">
             <p className="mb-4 inline-flex items-center gap-1.5 rounded-full bg-teal-950/40 border border-teal-850 px-3 py-1 text-xs font-semibold tracking-wide text-teal-400">
               <Microscope className="h-3.5 w-3.5" />
-              HUD Diagnostic Suite
+              Advanced Screening Suite
             </p>
             <h1 className="text-3xl font-extrabold tracking-tight text-white md:text-4.5xl leading-tight">
-              AI Skin Cancer <br />
+              Dermatological screening <br />
               <span className="bg-gradient-to-r from-teal-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent">
-                Detection
+                powered by ViT & XGBoost
               </span>
             </h1>
             <p className="mt-5 text-sm leading-relaxed text-slate-400">
-              A high-precision neural screening workspace for melanoma awareness. Leverages hybrid `cnn+xgboost model` and `vit+xgboost model` pipelines for morphological skin analysis.
+              Harnessing advanced artificial intelligence for early and accurate skin anomaly detection. Your first step towards proactive skin health.
             </p>
             
-            <button
-              type="button"
-              onClick={() => setShowModelPicker(true)}
-              className="mt-8 group w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-teal-600 to-cyan-600 px-6 py-3 text-sm font-semibold text-white shadow-[0_0_15px_rgba(20,184,166,0.3)] transition-all duration-300 hover:shadow-[0_0_25px_rgba(6,182,212,0.5)] hover:-translate-y-0.5"
-            >
-              Start Detection
-              <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-            </button>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <button
+                type="button"
+                onClick={() => setShowModelPicker(true)}
+                className="group inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-teal-600 to-cyan-600 px-6 py-3 text-sm font-semibold text-white shadow-[0_0_15px_rgba(20,184,166,0.3)] transition-all duration-300 hover:shadow-[0_0_25px_rgba(6,182,212,0.5)] hover:-translate-y-0.5"
+              >
+                Start Free Screening
+                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate("/about")}
+                className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/10 bg-[#0e101b]/40 px-6 py-3 text-sm font-semibold text-slate-350 transition hover:bg-slate-800 hover:text-white"
+              >
+                Learn More
+              </button>
+            </div>
           </div>
         </div>
 
