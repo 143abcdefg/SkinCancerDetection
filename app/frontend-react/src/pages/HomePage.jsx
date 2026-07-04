@@ -44,13 +44,13 @@ function HomePage() {
               Advanced Screening Suite
             </p>
             <h1 className="text-3xl font-extrabold tracking-tight text-white md:text-4.5xl leading-tight">
-              Dermatological screening <br />
+              Skin Cancer <br />
               <span className="bg-gradient-to-r from-teal-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent">
-                powered by ViT & XGBoost
+                Detection
               </span>
             </h1>
             <p className="mt-5 text-sm leading-relaxed text-slate-400">
-              Harnessing advanced artificial intelligence for early and accurate skin anomaly detection. Your first step towards proactive skin health.
+              A high-precision neural screening workspace for melanoma awareness. Leverages hybrid CNN+XGBoost and ViT+XGBoost pipelines for morphological skin analysis.
             </p>
             
             <div className="mt-8 flex flex-wrap gap-3">
@@ -59,7 +59,7 @@ function HomePage() {
                 onClick={() => setShowModelPicker(true)}
                 className="group inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-teal-600 to-cyan-600 px-6 py-3 text-sm font-semibold text-white shadow-[0_0_15px_rgba(20,184,166,0.3)] transition-all duration-300 hover:shadow-[0_0_25px_rgba(6,182,212,0.5)] hover:-translate-y-0.5"
               >
-                Start Free Screening
+                Start Detection
                 <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </button>
               <button
