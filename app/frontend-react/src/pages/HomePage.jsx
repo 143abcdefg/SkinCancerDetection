@@ -1,20 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, BrainCircuit, Cpu, Microscope, ShieldCheck, X, Activity, Eye, Sliders, Sparkles, Camera } from "lucide-react";
+import { ArrowRight, BrainCircuit, Cpu, Microscope, ShieldCheck, X, Activity, Sliders, Sparkles } from "lucide-react";
 import { usePrediction } from "../context/PredictionContext";
 
 function HomePage() {
   const [showModelPicker, setShowModelPicker] = useState(false);
-  const [pulsePhase, setPulsePhase] = useState(0);
   const navigate = useNavigate();
   const { setSelectedModel } = usePrediction();
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setPulsePhase((prev) => (prev + 1) % 100);
-    }, 50);
-    return () => clearInterval(interval);
-  }, []);
 
   const handleModelSelect = (modelType) => {
     setSelectedModel(modelType);
@@ -22,200 +14,146 @@ function HomePage() {
     navigate("/detect", { state: { model: modelType } });
   };
 
-  const formattedDate = new Date().toLocaleDateString("en-US", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
-
-  // Dynamic heartbeat path simulation
-  const pulsePath = `M 0,25 Q 10,25 20,25 T 30,25 Q 35,5 40,45 T 45,25 Q 55,25 65,25 T 75,25 L 120,25`;
-
   return (
     <section className="fade-in mx-auto w-full max-w-6xl px-4 py-8 md:px-6 md:py-12 relative z-10">
-      <div className="grid items-stretch gap-8 md:grid-cols-12">
+      
+      {/* Hero Section */}
+      <div className="grid items-center gap-8 md:grid-cols-12 min-h-[480px]">
         {/* Left Column: Hero Text */}
-        <div className="md:col-span-5 flex flex-col justify-center glass-panel rounded-3xl p-8 md:p-10 border border-white/5 shadow-2xl relative overflow-hidden">
-          <div className="absolute -left-20 -top-20 h-40 w-40 rounded-full bg-teal-500/10 blur-[80px]" />
+        <div className="md:col-span-6 flex flex-col justify-center relative z-10">
+          <p className="mb-4 self-start inline-flex items-center gap-1.5 rounded-full bg-teal-950/40 border border-teal-850 px-3 py-1 text-xs font-semibold tracking-wide text-teal-400">
+            <Microscope className="h-3.5 w-3.5" />
+            Advanced Screening Suite
+          </p>
+          <h1 className="text-4xl font-extrabold tracking-tight text-white md:text-5.5xl leading-tight font-display">
+            SKIN CANCER <br />
+            <span className="bg-gradient-to-r from-teal-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent">
+              DETECTION
+            </span>
+          </h1>
+          <p className="mt-5 text-sm leading-relaxed text-slate-450 max-w-lg font-sans">
+            A high-precision neural screening workspace for melanoma awareness. Leverages hybrid CNN+XGBoost and ViT+XGBoost pipelines for morphological skin analysis.
+          </p>
           
-          <div className="relative z-10">
-            <p className="mb-4 inline-flex items-center gap-1.5 rounded-full bg-teal-950/40 border border-teal-850 px-3 py-1 text-xs font-semibold tracking-wide text-teal-400">
-              <Microscope className="h-3.5 w-3.5" />
-              Advanced Screening Suite
-            </p>
-            <h1 className="text-3xl font-extrabold tracking-tight text-white md:text-4.5xl leading-tight">
-              SKIN CANCER <br />
-              <span className="bg-gradient-to-r from-teal-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent">
-                DETECTION
-              </span>
-            </h1>
-            <p className="mt-5 text-sm leading-relaxed text-slate-400">
-              A high-precision neural screening workspace for melanoma awareness. Leverages hybrid CNN+XGBoost and ViT+XGBoost pipelines for morphological skin analysis.
-            </p>
-            
-            <div className="mt-8 flex flex-wrap gap-3">
-              <button
-                type="button"
-                onClick={() => setShowModelPicker(true)}
-                className="group inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-teal-600 to-cyan-600 px-6 py-3 text-sm font-semibold text-white shadow-[0_0_15px_rgba(20,184,166,0.3)] transition-all duration-300 hover:shadow-[0_0_25px_rgba(6,182,212,0.5)] hover:-translate-y-0.5"
-              >
-                Start Detection
-                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </button>
-              <button
-                type="button"
-                onClick={() => navigate("/about")}
-                className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/10 bg-[#0e101b]/40 px-6 py-3 text-sm font-semibold text-slate-350 transition hover:bg-slate-800 hover:text-white"
-              >
-                Learn More
-              </button>
-            </div>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <button
+              type="button"
+              onClick={() => setShowModelPicker(true)}
+              className="group inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-teal-600 to-cyan-600 px-6 py-3 text-sm font-semibold text-white shadow-[0_0_15px_rgba(20,184,166,0.3)] transition-all duration-300 hover:shadow-[0_0_25px_rgba(6,182,212,0.5)] hover:-translate-y-0.5"
+            >
+              Start Detection
+              <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate("/about")}
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/10 bg-[#0e101b]/40 px-6 py-3 text-sm font-semibold text-slate-350 transition hover:bg-slate-800 hover:text-white"
+            >
+              Learn More
+            </button>
           </div>
         </div>
 
-        {/* Right Column: Holographic HUD Preview */}
-        <div className="md:col-span-7 glass-panel rounded-3xl p-6 border border-white/5 shadow-2xl relative overflow-hidden flex flex-col justify-between">
-          {/* Neon background light grids */}
-          <div className="absolute right-0 bottom-0 h-48 w-48 rounded-full bg-purple-500/5 blur-[80px]" />
+        {/* Right Column: Rotating 3D Neural Sphere */}
+        <div className="md:col-span-6 flex items-center justify-center relative overflow-hidden p-4 min-h-[320px]">
           
-          {/* HUD Top Bar */}
-          <div className="mb-4 flex items-center justify-between border-b border-white/5 pb-3">
-            <div className="flex items-center gap-2">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
-              </span>
-              <span className="text-[10px] font-black tracking-widest text-slate-400 uppercase">TELEMETRY: ACTIVE</span>
-            </div>
-            <span className="text-[10px] font-bold tracking-wider text-teal-400 bg-teal-950/20 border border-teal-900/40 px-2.5 py-0.5 rounded shadow-[0_0_8px_rgba(45,212,191,0.1)]">
-              SYS.CALIBRATION: {formattedDate}
-            </span>
-          </div>
+          {/* Glowing background light rings */}
+          <div className="absolute h-64 w-64 rounded-full bg-cyan-500/5 blur-[100px] pointer-events-none" />
+          <div className="absolute h-64 w-64 rounded-full bg-purple-500/5 blur-[100px] pointer-events-none" />
 
-          {/* Grid Layout of Vitals and 3D Scanner */}
-          <div className="grid gap-4 md:grid-cols-12 items-stretch">
-            {/* Lesion Scan Telemetry Sidebar */}
-            <div className="md:col-span-4 flex flex-col gap-3">
-              {/* Scan Info Item 1: Optical Quality */}
-              <div className="rounded-xl border border-white/5 bg-[#0a0c16]/60 p-3 flex flex-col justify-between h-24 relative overflow-hidden">
-                <div className="flex items-center justify-between text-slate-400">
-                  <span className="text-[9px] font-bold tracking-wider uppercase">Optical Quality</span>
-                  <Camera className="h-3.5 w-3.5 text-teal-400" />
-                </div>
-                <div className="mt-1 flex flex-col">
-                  <span className="text-lg font-black text-white leading-tight">SHARP</span>
-                  <span className="text-[9px] text-slate-500">Focus: Sharp | Exposure: OK</span>
-                </div>
-                <div className="flex items-center gap-1.5 mt-1 text-[8px] font-semibold text-teal-400">
-                  <span className="h-1.5 w-1.5 rounded-full bg-teal-400 animate-pulse" />
-                  Clarity Index: 99.4%
-                </div>
-              </div>
-
-              {/* Scan Info Item 2: Dermoscopy Setup */}
-              <div className="rounded-xl border border-white/5 bg-[#0a0c16]/60 p-3 flex flex-col justify-between h-24">
-                <div className="flex items-center justify-between text-slate-400">
-                  <span className="text-[9px] font-bold tracking-wider uppercase">Dermoscopy Lens</span>
-                  <Sliders className="h-3.5 w-3.5 text-purple-400" />
-                </div>
-                <div className="mt-1 flex flex-col">
-                  <span className="text-lg font-black text-white leading-tight">POLARIZED</span>
-                  <span className="text-[9px] text-slate-500">Lens: DermLite IV | Zoom: 10x</span>
-                </div>
-                <div className="w-full bg-[#070912] border border-white/5 rounded-full h-1 overflow-hidden">
-                  <div className="bg-purple-500 h-full rounded-full w-[80%]" />
-                </div>
-              </div>
-
-              {/* Scan Info Item 3: Dermal AI Focus */}
-              <div className="rounded-xl border border-white/5 bg-[#0a0c16]/60 p-3 flex flex-col justify-between h-24">
-                <div className="flex items-center justify-between text-slate-400">
-                  <span className="text-[9px] font-bold tracking-wider uppercase">Dermal AI Focus</span>
-                  <Sparkles className="h-3.5 w-3.5 text-cyan-400 animate-pulse" />
-                </div>
-                <div className="mt-1 flex flex-col">
-                  <span className="text-lg font-black text-white leading-tight">HEATMAP</span>
-                  <span className="text-[9px] text-slate-500">Active attention networks ready</span>
-                </div>
-                <div className="flex gap-1 mt-1">
-                  <span className="h-1.5 w-1.5 rounded-full bg-cyan-400" />
-                  <span className="h-1.5 w-1.5 rounded-full bg-cyan-400/60" />
-                  <span className="h-1.5 w-1.5 rounded-full bg-cyan-400/30" />
-                </div>
-              </div>
+          {/* Interactive Sphere Canvas */}
+          <div className="relative h-64 w-64 md:h-80 md:w-80 flex items-center justify-center">
+            
+            {/* Concentric scan rings */}
+            <div className="absolute inset-0 rounded-full border border-cyan-500/10 flex items-center justify-center animate-[spin_60s_linear_infinite]">
+              <div className="absolute inset-4 rounded-full border border-dashed border-purple-500/10 flex items-center justify-center" />
             </div>
 
-            {/* Central 3D Scanning HUD */}
-            <div className="md:col-span-8 relative rounded-xl border border-white/5 bg-[#070912] hud-grid flex items-center justify-center p-4 min-h-[220px]">
-              {/* HUD corner brackets */}
-              <div className="absolute top-2 left-2 w-3.5 h-3.5 border-t border-l border-teal-500/40" />
-              <div className="absolute top-2 right-2 w-3.5 h-3.5 border-t border-r border-teal-500/40" />
-              <div className="absolute bottom-2 left-2 w-3.5 h-3.5 border-b border-l border-teal-500/40" />
-              <div className="absolute bottom-2 right-2 w-3.5 h-3.5 border-b border-r border-teal-500/40" />
+            {/* Neural Net SVG Sphere */}
+            <svg className="w-full h-full text-cyan-400/80 animate-[spin_40s_linear_infinite]" viewBox="0 0 200 200">
+              <defs>
+                <radialGradient id="sphereGlow" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.15" />
+                  <stop offset="100%" stopColor="#06b6d4" stopOpacity="0" />
+                </radialGradient>
+              </defs>
+              
+              {/* Glow background */}
+              <circle cx="100" cy="100" r="80" fill="url(#sphereGlow)" />
+              
+              {/* Outer wireframe rings */}
+              <circle cx="100" cy="100" r="70" stroke="currentColor" strokeWidth="0.5" strokeOpacity="0.15" fill="none" />
+              <circle cx="100" cy="100" r="50" stroke="currentColor" strokeWidth="0.5" strokeOpacity="0.1" strokeDasharray="3 3" fill="none" />
+              
+              {/* Rotating inner ellipses to give 3D spherical look */}
+              <ellipse cx="100" cy="100" rx="70" ry="22" stroke="currentColor" strokeWidth="0.5" strokeOpacity="0.25" fill="none" className="animate-[pulse_3s_ease-in-out_infinite]" />
+              <ellipse cx="100" cy="100" rx="22" ry="70" stroke="currentColor" strokeWidth="0.5" strokeOpacity="0.25" fill="none" className="animate-[pulse_3s_ease-in-out_infinite]" />
+              <ellipse cx="100" cy="100" rx="70" ry="35" stroke="currentColor" strokeWidth="0.5" strokeOpacity="0.15" fill="none" transform="rotate(45 100 100)" />
+              <ellipse cx="100" cy="100" rx="70" ry="35" stroke="currentColor" strokeWidth="0.5" strokeOpacity="0.15" fill="none" transform="rotate(-45 100 100)" />
+              
+              {/* Connected network nodes (particles) */}
+              <g className="animate-[spin_15s_linear_infinite_reverse] origin-[100px_100px]">
+                {/* Lines connecting nodes */}
+                <line x1="50" y1="50" x2="150" y2="50" stroke="currentColor" strokeWidth="0.5" strokeOpacity="0.2" />
+                <line x1="50" y1="50" x2="100" y2="150" stroke="currentColor" strokeWidth="0.5" strokeOpacity="0.2" />
+                <line x1="150" y1="50" x2="100" y2="150" stroke="currentColor" strokeWidth="0.5" strokeOpacity="0.2" />
+                
+                <line x1="100" y1="30" x2="50" y2="120" stroke="currentColor" strokeWidth="0.5" strokeOpacity="0.2" />
+                <line x1="100" y1="30" x2="150" y2="120" stroke="currentColor" strokeWidth="0.5" strokeOpacity="0.2" />
+                <line x1="50" y1="120" x2="150" y2="120" stroke="currentColor" strokeWidth="0.5" strokeOpacity="0.2" />
+                
+                {/* Nodes */}
+                <circle cx="50" cy="50" r="3" fill="#2dd4bf" className="shadow-[0_0_8px_#2dd4bf]" />
+                <circle cx="150" cy="50" r="3" fill="#a855f7" />
+                <circle cx="100" cy="150" r="3.5" fill="#06b6d4" />
+                <circle cx="100" cy="30" r="3.5" fill="#2dd4bf" />
+                <circle cx="50" cy="120" r="3" fill="#06b6d4" />
+                <circle cx="150" cy="120" r="3" fill="#a855f7" />
+              </g>
+            </svg>
 
-              {/* Concentric scan rings */}
-              <div className="relative h-44 w-44 rounded-full border border-teal-500/15 flex items-center justify-center">
-                <div className="h-32 w-32 rounded-full border border-dashed border-teal-500/10 flex items-center justify-center">
-                  <div className="h-20 w-20 rounded-full border border-teal-500/5 flex items-center justify-center" />
-                </div>
-
-                {/* Sweep scan gradient */}
-                <div className="absolute inset-0 rounded-full overflow-hidden pointer-events-none">
-                  <div className="absolute inset-0 origin-center animate-radar-sweep" style={{
-                    background: 'conic-gradient(from 0deg at 50% 50%, rgba(6, 182, 212, 0.15) 0deg, rgba(6, 182, 212, 0) 100deg)',
-                    borderRadius: '50%'
-                  }} />
-                </div>
-
-                {/* Crosshairs */}
-                <div className="absolute h-full w-[1px] bg-teal-500/10" />
-                <div className="absolute w-full h-[1px] bg-teal-500/10" />
-
-                {/* 3D Wireframe Hand Mesh drawing */}
-                <svg className="absolute w-24 h-24 text-teal-400/20 fill-none" viewBox="0 0 120 120" stroke="currentColor" strokeWidth="1">
-                  {/* Outer wrist contours */}
-                  <path d="M 40,110 C 42,95 38,80 43,65 C 47,55 49,45 42,32 C 41,30 43,28 45,30 C 50,38 52,48 54,60" />
-                  <path d="M 53,60 C 55,50 56,38 60,25 C 61,23 63,23 64,25 C 66,38 65,50 64,62" />
-                  <path d="M 64,62 C 67,52 70,40 76,28 C 77,26 79,27 79,29 C 79,42 77,54 73,66" />
-                  <path d="M 73,66 C 77,58 82,49 89,41 C 90,39 92,41 91,43 C 87,55 81,66 75,76" />
-                  <path d="M 75,76 C 82,74 90,70 98,67 C 100,66 101,68 99,70 C 92,78 84,83 76,87" />
-                  {/* Wrist base */}
-                  <path d="M 40,110 C 55,115 65,115 80,105 C 80,105 78,95 76,87" />
-                  {/* Cross-mesh curves */}
-                  <path d="M 41,90 C 53,95 68,92 78,85" strokeDasharray="2 2" />
-                  <path d="M 44,75 C 55,80 68,76 74,71" strokeDasharray="3 2" />
-                  {/* Telemetry points */}
-                  <circle cx="53" cy="60" r="2" className="fill-cyan-400 stroke-none animate-ping" />
-                  <circle cx="73" cy="66" r="2" className="fill-purple-400 stroke-none" />
-                </svg>
-
-                {/* Target overlay */}
-                <div className="absolute top-1/3 left-1/3 w-4 h-4 border border-rose-500/50 rounded-full animate-ping pointer-events-none" />
-                <div className="absolute top-1/3 left-1/3 text-[7px] font-bold text-rose-500 bg-rose-950/50 border border-rose-900/60 px-1 py-0.2 rounded mt-4">
-                  LESION_FLAG
-                </div>
-              </div>
-
-              {/* Technical Telemetry readings */}
-              <div className="absolute bottom-2 left-3 text-[7px] font-semibold text-slate-500 tracking-wider space-y-0.5 uppercase">
-                <div>SENSOR_FEED: OPTICAL_CMOS</div>
-                <div>BANDWIDTH: 1.2 GB/S</div>
-              </div>
-              <div className="absolute bottom-2 right-3 text-[7px] font-semibold text-slate-500 tracking-wider text-right space-y-0.5 uppercase">
-                <div>FREQ: 2.4 GHZ</div>
-                <div>GRID_RESOL: 0.12 MM</div>
-              </div>
-            </div>
+            {/* Scanning radar sweep element */}
+            <div className="absolute inset-0 origin-center animate-[spin_10s_linear_infinite] pointer-events-none" style={{
+              background: 'conic-gradient(from 0deg at 50% 50%, rgba(6, 182, 212, 0.08) 0deg, rgba(6, 182, 212, 0) 120deg)',
+              borderRadius: '50%'
+            }} />
           </div>
+        </div>
+      </div>
 
-          {/* HUD Footer Details */}
-          <div className="mt-4 flex flex-wrap items-center justify-between border-t border-white/5 pt-3.5 text-xs text-slate-400 gap-2">
-            <span className="inline-flex items-center gap-1.5 text-emerald-400 font-bold">
-              <ShieldCheck className="h-4 w-4 shrink-0" />
-              HIPAA & GDPR Secure Encryption
-            </span>
-            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">WORKSPACE_ID: Derma-AI_1.0.0</span>
+      {/* Feature grid cards (exactly matching the mockup) */}
+      <div className="mt-12 grid gap-6 sm:grid-cols-3">
+        {/* Item 1 */}
+        <div className="glass-panel rounded-2xl p-6 border border-white/5 flex flex-col items-center text-center shadow-lg transition-transform duration-300 hover:-translate-y-1">
+          <div className="h-10 w-10 rounded-full bg-teal-950/40 border border-teal-850 flex items-center justify-center text-teal-400 mb-4">
+            <Sliders className="h-5 w-5" />
           </div>
+          <h3 className="text-base font-bold text-white font-display">Early Detection</h3>
+          <p className="mt-2 text-xs text-slate-400 leading-relaxed font-sans">
+            Harnessing advanced artificial intelligence for early and accurate skin cancer anomaly detection.
+          </p>
+        </div>
+
+        {/* Item 2 */}
+        <div className="glass-panel rounded-2xl p-6 border border-white/5 flex flex-col items-center text-center shadow-lg transition-transform duration-300 hover:-translate-y-1">
+          <div className="h-10 w-10 rounded-full bg-cyan-950/40 border border-cyan-850 flex items-center justify-center text-cyan-400 mb-4">
+            <Sparkles className="h-5 w-5" />
+          </div>
+          <h3 className="text-base font-bold text-white font-display">High Accuracy</h3>
+          <p className="mt-2 text-xs text-slate-400 leading-relaxed font-sans">
+            Improves the diagnostic confidence with ensemble voting across convolutional and transformer layers.
+          </p>
+        </div>
+
+        {/* Item 3 */}
+        <div className="glass-panel rounded-2xl p-6 border border-white/5 flex flex-col items-center text-center shadow-lg transition-transform duration-300 hover:-translate-y-1">
+          <div className="h-10 w-10 rounded-full bg-purple-950/40 border border-purple-850 flex items-center justify-center text-purple-400 mb-4">
+            <ShieldCheck className="h-5 w-5" />
+          </div>
+          <h3 className="text-base font-bold text-white font-display">User-Friendly</h3>
+          <p className="mt-2 text-xs text-slate-400 leading-relaxed font-sans">
+            Easy, clear, and intuitive workspace designed to promote user confidence and medical anomaly detection.
+          </p>
         </div>
       </div>
 
@@ -225,7 +163,7 @@ function HomePage() {
           <div className="w-full max-w-xl rounded-2xl border border-white/10 bg-[#0c0d16]/95 p-6 shadow-2xl shadow-black/80 transition-all duration-300">
             <div className="mb-4 flex items-center justify-between border-b border-white/5 pb-3.5">
               <div>
-                <h2 className="text-lg font-extrabold text-white tracking-tight">Select Diagnostic Pipeline</h2>
+                <h2 className="text-lg font-extrabold text-white tracking-tight font-display">Select Diagnostic Pipeline</h2>
                 <p className="mt-0.5 text-xs text-slate-400">
                   Select the ML pipeline configuration for lesion classification.
                 </p>
@@ -250,11 +188,11 @@ function HomePage() {
                 <div className="mb-3.5 inline-flex items-center justify-center rounded-lg bg-teal-950/60 border border-teal-850 p-2.5 text-teal-400 group-hover:bg-teal-500 group-hover:text-white transition-all duration-300">
                   <Cpu className="h-5 w-5" />
                 </div>
-                <p className="font-extrabold text-white text-base tracking-tight">CNN+XGBOOST MODEL</p>
+                <p className="font-extrabold text-white text-base tracking-tight font-display">CNN+XGBOOST MODEL</p>
                 <span className="mt-1 inline-block rounded-full bg-slate-900 border border-white/5 px-2.5 py-0.5 text-[9px] font-bold text-slate-400 group-hover:bg-teal-900/40 group-hover:text-teal-300">
                   Recommended for general screening
                 </span>
-                <p className="mt-3 text-xs leading-relaxed text-slate-400">
+                <p className="mt-3 text-xs leading-relaxed text-slate-400 font-sans">
                   Combines Deep Convolutional Features with a gradient-boosted decision tree layer for high-speed skin lesion classifications.
                 </p>
               </button>
@@ -268,11 +206,11 @@ function HomePage() {
                 <div className="mb-3.5 inline-flex items-center justify-center rounded-lg bg-purple-950/60 border border-purple-850 p-2.5 text-purple-400 group-hover:bg-purple-500 group-hover:text-white transition-all duration-300">
                   <BrainCircuit className="h-5 w-5" />
                 </div>
-                <p className="font-extrabold text-white text-base tracking-tight">VIT+XGBOOST MODEL</p>
+                <p className="font-extrabold text-white text-base tracking-tight font-display">VIT+XGBOOST MODEL</p>
                 <span className="mt-1 inline-block rounded-full bg-slate-900 border border-white/5 px-2.5 py-0.5 text-[9px] font-bold text-slate-400 group-hover:bg-purple-900/40 group-hover:text-purple-300">
                   Advanced morphological analysis
                 </span>
-                <p className="mt-3 text-xs leading-relaxed text-slate-400">
+                <p className="mt-3 text-xs leading-relaxed text-slate-400 font-sans">
                   Applies visual transformer attention layers to extract patch dependencies across the lesion surface. Optimized for complex textures.
                 </p>
               </button>
