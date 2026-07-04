@@ -44,9 +44,9 @@ function HomePage() {
               Advanced Screening Suite
             </p>
             <h1 className="text-3xl font-extrabold tracking-tight text-white md:text-4.5xl leading-tight">
-              Skin Cancer <br />
+              SKIN CANCER <br />
               <span className="bg-gradient-to-r from-teal-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent">
-                Detection
+                DETECTION
               </span>
             </h1>
             <p className="mt-5 text-sm leading-relaxed text-slate-400">
