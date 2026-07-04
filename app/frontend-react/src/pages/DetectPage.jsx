@@ -17,7 +17,7 @@ const getApiUrl = () => {
   ) {
     return `http://${hostname}:8000/predict`;
   }
-  return "https://najma-derma-api.loca.lt/predict";
+  return "https://skin-cancer-api-4r3k.onrender.com/predict";
 };
 const API_URL = getApiUrl();
 const ALLOWED_TYPES = ["image/jpeg", "image/jpg", "image/png"];
